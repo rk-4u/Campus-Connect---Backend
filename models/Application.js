@@ -14,4 +14,7 @@ const ApplicationSchema = new mongoose.Schema({
   feedback: String
 });
 
+// Add a unique compound index on job and student
+ApplicationSchema.index({ job: 1, student: 1 }, { unique: true });
+
 module.exports = mongoose.model('Application', ApplicationSchema);

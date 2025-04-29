@@ -1,6 +1,7 @@
 const Report = require('../models/Report');
 const Application = require('../models/Application');
 const User = require('../models/User');
+const PlacementDrive = require('../models/PlacementDrive');  // ✅ Add this line
 
 exports.generatePlacementReport = async () => {
   const totalStudents = await User.countDocuments({ role: 'student' });

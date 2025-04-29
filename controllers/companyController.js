@@ -24,3 +24,20 @@ exports.viewApplicants = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getCompanyJobs = async (req, res) => {
+  try {
+    const companyId = req.user.id; // Assuming the company ID is stored in the user object after authentication
+    const jobs = await Job.find({ company: companyId });
+    res.status(200).json({
+      success: true,
+      data: jobs
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching company jobs',
+      error: error.message
+    });
+  }
+};

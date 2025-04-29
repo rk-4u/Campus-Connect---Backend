@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const {
   postJob,
-  viewApplicants
+  viewApplicants,
+  getCompanyJobs
 } = require('../controllers/companyController');
 const { authenticate, authorize } = require('../middleware/auth');
 
@@ -11,5 +12,6 @@ router.use(authorize('company'));
 
 router.post('/jobs', postJob);
 router.get('/jobs/:jobId/applicants', viewApplicants);
+router.get('/jobs', getCompanyJobs);
 
 module.exports = router;
