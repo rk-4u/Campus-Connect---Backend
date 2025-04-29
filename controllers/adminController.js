@@ -24,6 +24,19 @@ exports.getPlacementStats = async (req, res) => {
   }
 };
 
+// Controller to fetch placement drives with POST method
+exports.getPlacementDrives = async (req, res) => {
+  try {
+    // Fetch all placement drives for the admin user
+    const drives = await PlacementDrive.find({ createdBy: req.user.id });
+    res.json(drives);
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ error: 'Failed to fetch placement drives.' });
+  }
+};
+
+
 exports.manageCompanies = async (req, res) => {
   try {
     const companies = await User.find({ role: 'company' });
