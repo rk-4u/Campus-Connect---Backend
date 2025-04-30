@@ -27,12 +27,31 @@ exports.viewApplicants = async (req, res) => {
 
 exports.getCompanyJobs = async (req, res) => {
   try {
-    const companyId = req.user.id; // Assuming the company ID is stored in the user object after authentication
-    const jobs = await Job.find({ company: companyId });
+    const companyId = req.user.id;
+
+    // Step 1: Fetch all jobs for the company
+    const jobs = await Job.find({ company: companyId }).lean(); // use .lean() for faster reads
+
+    // Step 2: For each job, fetch applicant count
+    const jobsWithApplicants = await Promise.all(
+      jobs.map(async (job) => {
+        const applicantCount = await Application.countDocuments({ job: job._id });
+        return {
+          ...job,
+          applicantsCount: applicantCount
+        };
+      })
+    );
+
+    // Step 3: Calculate total applicants for the company
+    const totalApplicants = jobsWithApplicants.reduce((sum, job) => sum + job.applicantsCount, 0);
+
     res.status(200).json({
       success: true,
-      data: jobs
+      totalApplicants,
+      data: jobsWithApplicants
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
