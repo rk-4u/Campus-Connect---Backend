@@ -6,9 +6,10 @@ const {
 } = require('../controllers/placementDriveController');
 const { authenticate } = require('../middleware/auth');
 
-router.use(authenticate);
-
-router.post('/', createDrive);
+// Public route - no token needed
 router.get('/', getDrives);
+
+// Protected route - token required
+router.post('/', authenticate, createDrive);
 
 module.exports = router;
